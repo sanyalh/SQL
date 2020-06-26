@@ -248,4 +248,25 @@ WHERE
         WHERE
             Orders.CustomerID = Customers.CustomerID
                 AND EmployeeID = 4);
-    
+                
+
+#Advanced problems
+
+#32
+SELECT 
+    Customers.CustomerID,
+    Customers.CompanyName,
+    Orders.OrderID,
+    SUM(Quantity * UnitPrice) AS TotalOrderAmount
+FROM
+    Customers
+        JOIN
+    Orders ON Orders.CustomerID = Customers.CustomerID
+        JOIN
+    OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+WHERE
+    OrderDate >= '2016-01-01'
+        AND OrderDate < '2017-01-01'
+GROUP BY Customers.CustomerID , Customers.CompanyName , Orders.Orderid
+HAVING SUM(Quantity * UnitPrice) > 10000
+ORDER BY TotalOrderAmount DESC;
