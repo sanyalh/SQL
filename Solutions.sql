@@ -293,7 +293,9 @@ ORDER BY TotalOrderAmount DESC;
 SELECT 
     Customers.CustomerID,
     Customers.CompanyName,
-    SUM(Quantity * UnitPrice) AS TotalOrderAmount
+    Orders.OrderID,
+    SUM(Quantity * UnitPrice) AS TotalsWithoutDiscount,
+    SUM(Quantity * UnitPrice * (1- Discount)) AS TotalsWithDiscount
 FROM
     Customers
         JOIN
@@ -304,5 +306,10 @@ WHERE
     OrderDate >= '2016-01-01'
         AND OrderDate < '2017-01-01'
 GROUP BY Customers.CustomerID , Customers.CompanyName
-HAVING SUM(Quantity * UnitPrice) > 15000
-ORDER BY TotalOrderAmount DESC;
+HAVING TotalsWithDiscount > 10000
+ORDER BY TotalsWithDiscount DESC;
+
+#35
+select EmployeeID, OrderID, OrderDate from orders where OrderDate in (select max(OrderDate) from orders group by month(OrderDate)) order by EmployeeID, OrderID;
+
+select EmployeeID, OrderID, OrderDate from (select * from orders group by month(OrderDate) having month(OrderDate) = max(OrderDate)) order by EmployeeID, OrderID;
